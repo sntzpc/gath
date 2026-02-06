@@ -168,23 +168,26 @@ class Auth {
 
         const setBtn = (enabled, suffix='')=>{
             if(!btn) return;
+
+            // ✅ FIX: kalau tombol sedang loading (spinner), jangan ditimpa countdown
+            if(btn.classList.contains('is-loading')) return;
+
             btn.disabled = !enabled;
 
             // shimmer hanya saat dibuka
             btn.classList.toggle('fg-shimmer', !!enabled);
 
-            // tampilkan suffix kecil (contoh: "Dibuka 00:12:10")
             if(suffix){
-            btn.innerHTML = `
+                btn.innerHTML = `
                 <div class="leading-tight text-center">
-                <div>${btn.dataset.baseHtml || 'Verifikasi'}</div>
-                <div class="text-[11px] opacity-90 mt-1">${suffix}</div>
+                    <div>${btn.dataset.baseHtml || 'Verifikasi'}</div>
+                    <div class="text-[11px] opacity-90 mt-1">${suffix}</div>
                 </div>
-            `;
+                `;
             }else{
-            btn.innerHTML = btn.dataset.baseHtml || btn.innerHTML;
+                btn.innerHTML = btn.dataset.baseHtml || btn.innerHTML;
             }
-        };
+            };
 
         const setInput = (enabled)=>{
             if(nikInput) nikInput.disabled = !enabled;
@@ -266,6 +269,10 @@ class Auth {
             if(nowMs < startMs){
             const left = startMs - nowMs;
             const cd = fmtCD(left);
+
+            if(btn && btn.classList.contains('is-loading')) {
+            return;
+            }
 
             setBtn(false, `Dibuka ${cd}`);
             setInput(false);
