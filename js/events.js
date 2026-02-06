@@ -8,7 +8,7 @@ class Events {
             {
                 id: 'event-1',
                 title: 'Pembukaan Acara',
-                description: 'Pembukaan resmi Family Gathering KMP1 2026 oleh direksi perusahaan',
+                description: 'Pembukaan resmi Family Gathering KMP-2 2026 oleh direksi perusahaan',
                 time: '16:00 - 16:30',
                 day: 3, // Hari ke-3 (18 Januari - Gala Dinner)
                 active: true

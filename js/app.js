@@ -5,7 +5,7 @@ class App {
     }
 
     initialize() {
-        console.log('Family Gathering KMP1 2026 App initialized');
+        console.log('Family Gathering KMP-2 2026 App initialized');
         
         // Cek apakah user sudah absen
         this.checkInitialState();

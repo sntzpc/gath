@@ -135,16 +135,16 @@ function settingsFormHtml_(){
 
         <div>
           <label class="block text-sm font-semibold text-gray-700 mb-1">Header Title (User App)</label>
-          <input id="cfg_brand_headerTitle" class="w-full p-3 border rounded-xl" placeholder="Mis: Family Gathering KMP1" />
+          <input id="cfg_brand_headerTitle" class="w-full p-3 border rounded-xl" placeholder="Mis: Family Gathering KMP-2" />
         </div>
         <div>
           <label class="block text-sm font-semibold text-gray-700 mb-1">Header Subtitle (User App)</label>
-          <input id="cfg_brand_headerSubtitle" class="w-full p-3 border rounded-xl" placeholder="Mis: Seriang Training, 16-19 Januari 2026" />
+          <input id="cfg_brand_headerSubtitle" class="w-full p-3 border rounded-xl" placeholder="Mis: Pontianak, 14-16 Februari 2026" />
         </div>
 
         <div class="md:col-span-2">
           <label class="block text-sm font-semibold text-gray-700 mb-1">Nama Acara (Event Name)</label>
-          <input id="cfg_event_name" class="w-full p-3 border rounded-xl" placeholder="Mis: Family Gathering KMP1 Tahun 2026" />
+          <input id="cfg_event_name" class="w-full p-3 border rounded-xl" placeholder="Mis: Family Gathering KMP-2 Tahun 2026" />
           <div class="text-xs text-gray-500 mt-1">Token utama: <b>{eventName}</b>. Dipakai di banyak teks default.</div>
         </div>
 
@@ -234,7 +234,7 @@ function settingsFormHtml_(){
 
         <div>
           <label class="block text-sm font-semibold text-gray-700 mb-1">Footer - Nama Organisasi</label>
-          <input id="cfg_idx_footerOrg" class="w-full p-3 border rounded-xl" placeholder="Mis: Karyamas Plantation 1" />
+          <input id="cfg_idx_footerOrg" class="w-full p-3 border rounded-xl" placeholder="Mis: Karyamas Plantation 2" />
         </div>
         <div>
           <label class="block text-sm font-semibold text-gray-700 mb-1">Footer - Nama Event</label>

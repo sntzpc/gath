@@ -3,7 +3,7 @@
 Dashboard ini menampilkan:
 - Hitung mundur menuju Gala Dinner (waktu fleksibel dari frontend)
 - Ringkasan kehadiran realtime (dari Google Sheet `attendance`)
-- Siklus kartu otomatis: **KMP1 Total → Region acak → Unit acak → ulang**
+- Siklus kartu otomatis: **KMP-2 Total → Region acak → Unit acak → ulang**
 
 ## 1) Deploy Backend (Google Apps Script)
 1. Buka Google Apps Script (project baru).
