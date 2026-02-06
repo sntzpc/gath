@@ -19,11 +19,11 @@
    3) Deploy Web App, salin URL dan tempel ke config.js (AppConfig.api.url)
    ========================== */
 
-const SPREADSHEET_ID = '1jwYoZfkzJIG_qkWPcx5pjqmeFfeIR_60ccdr5TbKNIY';
+const SPREADSHEET_ID = '1GOqDTBaRZb6PjX1kHKIZnebNJ4QIENr7cVnoMjZZHqE';
 const APP_TZ = 'Asia/Jakarta';
 const SESSION_DAYS = 7;
 const SALT = 'FG2026_SALT_CHANGE_ME';
-const PRIZE_IMG_FOLDER_ID = '16EBlzWqYRT-5SAZMSZJdwkc_WyI03qbD';
+const PRIZE_IMG_FOLDER_ID = '19ltYcTr2rLmovM6U5FbWp7YzNliCC1qB';
 
 // Sheet names
 const SH = {
@@ -481,7 +481,7 @@ function configDefault_(){
   // yang disimpan di server hanya field yang mau dioverride.
   return {
     event: {
-      name: "Family Gathering KMP1 Tahun 2026",
+      name: "Family Gathering KMP-2 Tahun 2026",
       galaDinnerDate: "2026-01-19T07:00:00+07:00",
       galaDinnerEndTime: "2026-01-19T23:50:00+07:00",
       eventStartDate: "2026-01-16T00:00:00+07:00",
@@ -499,9 +499,9 @@ function configDefault_(){
       brand: {
         appName: "FG Event Attendance",
         shortName: "FG Attendance",
-        headerTitle: "Family Gathering KMP1",
+        headerTitle: "Family Gathering KMP-2",
         headerSubtitle: "Seriang Training, 16-19 Januari 2026",
-        adminSubtitle: "Family Gathering KMP1 2026"
+        adminSubtitle: "Family Gathering KMP-2 2026"
       },
 
       // ===== TEXTS PER HALAMAN (opsional, multi-event) =====
@@ -1316,7 +1316,7 @@ function seedInitialData_(){
     const baseDate = 'Minggu, 18 Januari 2026';
     const loc = 'Grand Ballroom';
     const sampleEv = [
-      { id:'event-1', day:3, date:baseDate, time:'16:00 - 16:30', title:'Pembukaan Acara', description:'Pembukaan resmi Famili Gathering KMP1 2026', location:loc, icon:'fa-microphone', color:'purple', sort:1 },
+      { id:'event-1', day:3, date:baseDate, time:'16:00 - 16:30', title:'Pembukaan Acara', description:'Pembukaan resmi Famili Gathering KMP-2 2026', location:loc, icon:'fa-microphone', color:'purple', sort:1 },
       { id:'event-2', day:3, date:baseDate, time:'16:30 - 17:00', title:'Sambutan & Laporan', description:'Sambutan dari manajemen dan laporan kegiatan', location:loc, icon:'fa-chart-line', color:'purple', sort:2 },
       { id:'event-3', day:3, date:baseDate, time:'17:00 - 18:30', title:'Makan Malam', description:'Gala dinner dengan berbagai hidangan spesial', location:loc, icon:'fa-utensils', color:'purple', sort:3 },
       { id:'event-4', day:3, date:baseDate, time:'18:30 - 19:30', title:'Hiburan & Performance', description:'Sesi hiburan dan performance dari peserta', location:loc, icon:'fa-theater-masks', color:'purple', sort:4 },

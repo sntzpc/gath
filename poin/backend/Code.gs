@@ -11,7 +11,7 @@
  */
 
 const CONFIG = {
-  SPREADSHEET_ID: '1COAJ2tk0KgmUNbHGAwzY4S4Y0AFQ7uLykDOkZRujLcs', // <-- ganti sesuai file Anda
+  SPREADSHEET_ID: '13dcZTJ20wsiB9ELmCqpgxhNsIpwCmAK-aSibHOuCrZc', // <-- ganti sesuai file Anda
   SHEETS: {
     STAFF: 'data_staff',
     ADMINS: 'admin_users',
@@ -160,7 +160,7 @@ function defaultConfig_(){
       {
         id:'yel-yel',
         name:'Yel-Yel',
-        category:'KMP1',
+        category:'KMP-2',
         teams:[
           {id:'BNRE', name:'BNRE'},
           {id:'BSME', name:'BSME'}

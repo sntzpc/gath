@@ -15,7 +15,7 @@
      - token: (opsional) session token (untuk operator set/clear current event)
    ========================== */
 
-const SPREADSHEET_ID = '1jwYoZfkzJIG_qkWPcx5pjqmeFfeIR_60ccdr5TbKNIY';
+const SPREADSHEET_ID = '1GOqDTBaRZb6PjX1kHKIZnebNJ4QIENr7cVnoMjZZHqE';
 const APP_TZ = 'Asia/Jakarta';
 const SESSION_DAYS = 7;
 const SALT = 'FG2026_SALT_CHANGE_ME';

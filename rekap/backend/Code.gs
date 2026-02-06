@@ -1,6 +1,6 @@
 // Konfigurasi
 const CONFIG = {
-  sheetId: '1jwYoZfkzJIG_qkWPcx5pjqmeFfeIR_60ccdr5TbKNIY',
+  sheetId: '1GOqDTBaRZb6PjX1kHKIZnebNJ4QIENr7cVnoMjZZHqE',
   sheetNames: {
     participants: 'participants',
     data_staff: 'data_staff'

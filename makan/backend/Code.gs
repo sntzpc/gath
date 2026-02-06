@@ -8,7 +8,7 @@
  */
 
 const CFG = {
-  SHEET_ID: '1jwYoZfkzJIG_qkWPcx5pjqmeFfeIR_60ccdr5TbKNIY',
+  SHEET_ID: '1GOqDTBaRZb6PjX1kHKIZnebNJ4QIENr7cVnoMjZZHqE',
   SHEET_ATTENDANCE: 'attendance',
   CACHE_SEC: 2 // cache ringan untuk mengurangi beban (detik)
 };
