@@ -364,7 +364,7 @@ function deriveGucFromExec(execUrl){
 const GAS_URL_GUC = deriveGucFromExec(GAS_URL_EXEC);
 
 // ✅ cache base terakhir yang sukses (penting untuk Chrome mobile)
-const LS_KEY_LAST_GOOD_BASE = "fg_eval_v5_last_good_base";
+const LS_KEY_LAST_GOOD_BASE = "gat_eval_v5_last_good_base";
 
 // =========================================================
 // Helpers append script (head kadang belum siap di Chrome mobile)
@@ -382,12 +382,12 @@ function safeAppend(node){
 
 // Storage keys
 const LS = {
-  device: "fg_eval_v5_device_id",
-  session: "fg_eval_v5_session",
-  config: "fg_eval_v5_config_cache",
-  ratings: "fg_eval_v5_ratings",
-  outbox: "fg_eval_v5_outbox",
-  failed: "fg_eval_v5_failed"
+  device: "gat_eval_v5_device_id",
+  session: "gat_eval_v5_session",
+  config: "gat_eval_v5_config_cache",
+  ratings: "gat_eval_v5_ratings",
+  outbox: "gat_eval_v5_outbox",
+  failed: "gat_eval_v5_failed"
 };
 
 const state = {
@@ -606,7 +606,7 @@ function apiPm(action, params={}, payload=null){
 
           function onMsg(ev){
             const d = ev && ev.data;
-            if(!d || d.__fg_pm !== true) return;
+            if(!d || d.__gat_pm !== true) return;
             if(d.cbid !== cbid) return;
             cleanup();
             res(d.data);
@@ -1341,7 +1341,7 @@ function exportXlsx(){
   const ws = XLSX.utils.json_to_sheet(rows);
   const wb = XLSX.utils.book_new();
   XLSX.utils.book_append_sheet(wb, ws, "ratings");
-  const fname = `FG_Ratings_${(cfg.event_id||"FG")}_${new Date().toISOString().slice(0,10)}.xlsx`;
+  const fname = `GAT_Ratings_${(cfg.event_id||"FG")}_${new Date().toISOString().slice(0,10)}.xlsx`;
   XLSX.writeFile(wb, fname);
   toast("Export XLSX dibuat", "ok");
 }

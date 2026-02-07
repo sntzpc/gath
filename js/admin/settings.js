@@ -386,7 +386,7 @@ function settingsFormHtml_(){
       <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
         <div>
           <label class="block text-sm font-semibold text-gray-700 mb-1">NIK Min Length</label>
-          <input id="cfg_nik_len" type="number" class="w-full p-3 border rounded-xl" />
+          <input id="cgat_nik_len" type="number" class="w-full p-3 border rounded-xl" />
         </div>
 
         <label class="inline-flex items-center gap-2 p-3 border rounded-xl bg-gray-50 cursor-pointer">
@@ -598,7 +598,7 @@ async function settingsLoadIntoForm(){
   document.getElementById('cfg_event_switch').value = g('app.eventSwitchInterval', 180000);
 
   // SECURITY
-  document.getElementById('cfg_nik_len').value = g('security.nikMinLength', 8);
+  document.getElementById('cgat_nik_len').value = g('security.nikMinLength', 8);
   document.getElementById('cfg_enable_date').checked = !!g('security.enableDateValidation', true);
   document.getElementById('cfg_enable_geo').checked = !!g('security.enableGeofencing', true);
   document.getElementById('cfg_debug').checked = !!g('security.debugMode', false);
@@ -714,7 +714,7 @@ setIfNum('app.locationUpdateInterval', 'cfg_loc_interval');
 setIfNum('app.eventSwitchInterval', 'cfg_event_switch');
 
 // Security (explicit)
-setIfNum('security.nikMinLength', 'cfg_nik_len');
+setIfNum('security.nikMinLength', 'cgat_nik_len');
 setIfBool('security.enableDateValidation', 'cfg_enable_date');
 setIfBool('security.enableGeofencing', 'cfg_enable_geo');
 setIfBool('security.debugMode', 'cfg_debug');

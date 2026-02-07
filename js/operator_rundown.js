@@ -5,7 +5,7 @@
 
 (()=>{
   const $ = (s,r=document)=>r.querySelector(s);
-  const KEY = 'fg_operator_token_v1';
+  const KEY = 'gat_operator_token_v1';
   let token = localStorage.getItem(KEY)||'';
 
   function esc(s){

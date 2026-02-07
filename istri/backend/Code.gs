@@ -71,6 +71,23 @@ function hasWifeFromFamilyJson_(familyJson){
   if(!items) return false;
 
   const hit = (obj)=>{
+    // ================================
+    // Support beberapa format family_json:
+    // 1) Array of objects (structured)
+    // 2) Array of strings, contoh: "Yetti Sihotang (Istri)"
+    // 3) Object with field family/members
+    // ================================
+
+    // (2) string entry
+    if(typeof obj === 'string'){
+      const s = String(obj||'').toLowerCase();
+      // label umum di data attendance
+      if(s.includes('(istri)') || s.includes(' istri') || s.endsWith('istri')) return true;
+      // fallback: spouse/wife
+      if(s.includes('(wife)') || s.includes(' wife') || s.includes('spouse')) return true;
+      return false;
+    }
+
     if(!obj || typeof obj !== 'object') return false;
     // cek flag eksplisit
     if(obj.is_wife === true || obj.isWife === true) return true;
@@ -103,7 +120,8 @@ function stripTitle_(name){
 
 function buildStaffInfoMap_(){
   // Map nik -> { name, has_wife }
-  const part = getAll_(SH.participants);
+  let part = [];
+  try{ part = getAll_(SH.participants); }catch(e){ part = []; }
   const map = new Map();
   part.forEach(r=>{
     const nik = String(r.nik||'').trim();
@@ -134,7 +152,10 @@ function listEligibleFromAttendance_(onlyStaff, eventId){
   const ev = String(eventId||'').trim();
   const rows = getAll_(SH.attendance);
 
-  // Jika onlyStaff=true, pool diambil dari staff yang punya istri saja (berdasarkan master participants.family_json)
+  // Jika onlyStaff=true, pool diambil dari staff yang punya istri.
+  // Sumber cek istri:
+  // - Utama: master participants.family_json (jika ada)
+  // - Fallback: attendance.family_json (umumnya array string "...(Istri)")
   const staffInfo = onlyStaff ? buildStaffInfoMap_() : null;
 
   // dedupe by NIK (ambil data terbaru jika ada duplikat)
@@ -146,8 +167,15 @@ function listEligibleFromAttendance_(onlyStaff, eventId){
 
     if(staffInfo){
       const info = staffInfo.get(nik);
-      if(!info) return;              // bukan staff
-      if(!info.has_wife) return;      // staff tapi tidak ada istri
+      const hasWifeByAttendance = hasWifeFromFamilyJson_(r.family_json);
+      // Jika master participants tidak ada / nik tidak ditemukan, kita tetap izinkan
+      // sepanjang attendance menunjukkan ada "(Istri)".
+      if(!info){
+        if(!hasWifeByAttendance) return;
+      }else{
+        // harus punya istri dari salah satu sumber
+        if(!info.has_wife && !hasWifeByAttendance) return;
+      }
     }
 
     const ts = new Date(String(r.timestamp||''));
@@ -182,6 +210,50 @@ function uniqByNik_(rows){
   });
   return out;
 }
+
+// ==========================
+// WIFE DRAW - Exclusion Set
+// ==========================
+// Untuk undian khusus istri: jika istri (berdasarkan draw record dengan display_name diawali "Ibu ")
+// sudah pernah MENANG / TAKEN atau sudah DIHAPUS (removed) karena tidak mengambil,
+// maka NIK tersebut tidak boleh ikut undian istri lagi.
+// Catatan: Doorprize staff (umum) tidak memakai display_name "Ibu ...", jadi tidak terpengaruh.
+function wifeExcludedNikSet_(){
+  let rows = [];
+  try{ rows = getAll_(SH.draws); }catch(e){ rows = []; }
+
+  const set = new Set();
+  rows.forEach(r=>{
+    const nik = String(r.nik||'').trim();
+    if(!nik) return;
+
+    const dn = String(r.display_name||'').trim();
+    const nm = String(r.name||'').trim();
+
+    // identifikasi record undian istri
+    const isWife = (dn && dn.toLowerCase().startsWith('ibu ')) ||
+                   (!dn && nm && nm.toLowerCase().startsWith('ibu ')) ||
+                   (dn && dn.toLowerCase().includes('(istri)')) ||
+                   (nm && nm.toLowerCase().includes('(istri)'));
+
+    if(!isWife) return;
+
+    const status = String(r.status||'').toUpperCase();
+    const takenAt = String(r.taken_at||'').trim();
+    const removedAt = String(r.removed_at||'').trim();
+
+    // Kriteria "sudah tidak boleh ikut lagi":
+    // - status WIN/TAKEN/REMOVED, atau
+    // - taken_at terisi, atau
+    // - removed_at terisi
+    if(status === 'WIN' || status === 'TAKEN' || status === 'REMOVED' || takenAt || removedAt){
+      set.add(nik);
+    }
+  });
+
+  return set;
+}
+
 
 function staffNikSet_(){
   // master staff dari sheet participants
@@ -612,7 +684,10 @@ function operator_participantsEligible_(p, u){
   const onlyStaff = (p && p.onlyStaff !== undefined) ? bool_(p.onlyStaff) : true;
   const eventId = (p && p.event_id) ? String(p.event_id||'').trim() : getActiveEventId_();
 
+  const ex = wifeExcludedNikSet_();
+
   const rows = listEligibleFromAttendance_(onlyStaff, eventId)
+    .filter(r=> !ex.has(String(r.nik||'').trim()))
     .map(r=>({ nik: String(r.nik), name: String(r.name||''), display_name: String(r.display_name||''), is_staff: !!onlyStaff }));
 
   return { rows, source:'attendance', event_id:eventId||'' };
@@ -659,9 +734,12 @@ function operator_drawDoorprize_(p, u){
     // Tidak ada pengecualian berdasarkan riwayat undian.
 
     // build eligible list from attendance (confirmed hadir)
-    // default: only staff
-    const baseEligible = listEligibleFromAttendance_(true, eventId);
-    const eligible = baseEligible;
+// default: only staff (khusus undian istri: staff yang punya istri)
+const baseEligible = listEligibleFromAttendance_(true, eventId);
+
+// EXCLUDE: istri yang sudah pernah menang / taken / removed (tidak boleh ikut lagi)
+const ex = wifeExcludedNikSet_();
+const eligible = baseEligible.filter(r=> !ex.has(String(r.nik||'').trim()));
     if(!eligible.length) throw new Error('Tidak ada peserta hadir yang eligible untuk diundi');
 
     // sample without replacement (shuffle partial)

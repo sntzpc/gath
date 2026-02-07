@@ -544,7 +544,7 @@
         const GAS_TIMER_URL_GUC_ECHO =
         'https://script.googleusercontent.com/macros/echo?user_content_key=AehSKLgYYrW6oHN_6Z09GWSZ0Cbu0aSvc4UtZ6o9ni1Ipf39MLldqgj9sU5YepzlkJlsza8TRWV57u4NBTyb3sdXDb8MugltL17UXbLxi0I-zGPwF1h6RglC0cO_TTFYmgIZ7aqC5wlLQ-Pw6FbKc_U_mrTc4MeH6rcLGk7evqKiRulJhlYC3fXj_a7CFsmXNPoyF1qE0HqwY5fgeKtSBHDdxjvxkgJ0NjimIwDrKo5KrYPsyow9LQU8QCOn_lM4lckUFjOtyADtDF25JWhFJrNMG2hQLL_Trg&lib=MakqIpVyDoIVek-vuzNqnhOKhRZZwLdRi';
 
-        const LS_KEY_LAST_GOOD_BASE = 'fg_timer_last_good_base_v3';
+        const LS_KEY_LAST_GOOD_BASE = 'gat_timer_last_good_base_v3';
 
         // ===== helpers =====
         function deriveGucExecFromExec(execUrl){
@@ -569,7 +569,7 @@
 
         function jsonpCallOnce(baseUrl, params, timeoutMs = 20000){
         return new Promise((resolve, reject) => {
-            const cb = '__fg_jsonp_' + Date.now() + '_' + Math.random().toString(16).slice(2);
+            const cb = '__gat_jsonp_' + Date.now() + '_' + Math.random().toString(16).slice(2);
             let script = null;
             let done = false;
 

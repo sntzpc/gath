@@ -223,7 +223,7 @@ window.AppConfig = {
 // Semua modul harus membaca window.AppConfig secara langsung.
 
 (function(){
-  const LS_KEY = 'fg_config_patch_v1';
+  const LS_KEY = 'gat_config_patch_v1';
 
   // ✅ DEFAULTS (tetap ada, tidak perlu deploy ulang untuk override)
   const DEFAULTS = window.AppConfig || {

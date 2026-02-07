@@ -10,7 +10,7 @@
   // Catatan: gunakan URL script.googleusercontent.com jika tersedia (lebih aman dari CORS).
   const BACKEND_URL = 'https://script.google.com/macros/s/AKfycbw6U95yuf5JvISfGuzewHWecaoXv9_6xafmNEYgXIbK4QQnZDw3HhZ1TfTTJ5_nCtPF0A/exec';
 
-  const STORAGE_KEY = 'fg_gala_kmp2_settings_v1';
+  const STORAGE_KEY = 'gat_gala_kmp2_settings_v1';
 
   const DEFAULTS = {
     eventId: 'KMP2_2026',

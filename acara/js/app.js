@@ -4,10 +4,10 @@
   const { $, esc, dayLabel } = window.utils;
 
   const KEY_CANDIDATES = [
-    'fg_operator_token_v1',
-    'fg_admin_token_v1',
-    'fg_token_v1',
-    'fg_token'
+    'gat_operator_token_v1',
+    'gat_admin_token_v1',
+    'gat_token_v1',
+    'gat_token'
   ];
 
   function getToken(){
@@ -21,7 +21,7 @@
   // ==========================
   // State & cache (biar terasa instan)
   // ==========================
-  const CACHE_KEY = 'fg_rundown_cache_v1';
+  const CACHE_KEY = 'gat_rundown_cache_v1';
   const CACHE_TTL_MS = 30 * 1000; // 30 detik (perceived instant, tetap segar)
   const state = { events: [], current: null };
 

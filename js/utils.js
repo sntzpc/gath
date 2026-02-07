@@ -35,7 +35,7 @@ class Utils {
   // ===============================
   // Live Location Queue (offline-first)
   // ===============================
-  _liveLocQueueKey(){ return 'fg_live_loc_queue_v1'; }
+  _liveLocQueueKey(){ return 'gat_live_loc_queue_v1'; }
 
   _readLiveLocQueue(){
     try{

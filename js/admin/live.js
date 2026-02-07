@@ -399,7 +399,7 @@ async function liveInitMap(){
 
   // tunggu loader Leaflet (robust loader di admin.html)
   try{
-    if(window.__FG_LEAFLET_READY__) await window.__FG_LEAFLET_READY__;
+    if(window.__GAT_LEAFLET_READY__) await window.__GAT_LEAFLET_READY__;
   }catch(e){}
   if(!window.L){ el.innerHTML = '<div class="p-4 text-red-600">Leaflet tidak ter-load. Periksa koneksi / CDN / path libs.</div>'; return; }
 

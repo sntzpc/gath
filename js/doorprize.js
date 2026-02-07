@@ -9,7 +9,7 @@ class DoorprizeFeed {
     this.audio     = document.getElementById('doorprize-sound');
 
     this.notificationContainer = this.createNotificationContainer();
-    this.lastDrawId = localStorage.getItem('fg_last_draw_id') || '';
+    this.lastDrawId = localStorage.getItem('gat_last_draw_id') || '';
 
     this.pollTimer = null;
     this.pollMs = 25000;
@@ -35,8 +35,8 @@ class DoorprizeFeed {
   // Ambil NIK user yang sedang login
   // =========================
   getMyNik(){
-    if (window.FG_USER?.nik) return String(window.FG_USER.nik || '').trim();
-    return String(localStorage.getItem('fg_nik') || '').trim();
+    if (window.GAT_USER?.nik) return String(window.GAT_USER.nik || '').trim();
+    return String(localStorage.getItem('gat_nik') || '').trim();
   }
 
   // =========================
@@ -205,7 +205,7 @@ class DoorprizeFeed {
 
     if(String(latest.draw_id) !== String(this.lastDrawId)){
       this.lastDrawId = String(latest.draw_id);
-      localStorage.setItem('fg_last_draw_id', this.lastDrawId);
+      localStorage.setItem('gat_last_draw_id', this.lastDrawId);
 
       const status = String(latest.status || 'WIN').toUpperCase();
 
@@ -339,6 +339,6 @@ document.addEventListener('DOMContentLoaded', bootDoorprize);
 // 2) kalau Anda punya event khusus user-ready, tetap dukung
 document.addEventListener('fg:user-ready', (e) => {
   // update global user jika Anda kirim dari auth
-  if(e?.detail?.nik) window.FG_USER = { ...(window.FG_USER||{}), nik: e.detail.nik };
+  if(e?.detail?.nik) window.GAT_USER = { ...(window.GAT_USER||{}), nik: e.detail.nik };
   bootDoorprize();
 });

@@ -554,12 +554,12 @@ class Auth {
             // (mulai dari sessionStorage.setItem... sampai showNotification)
             sessionStorage.setItem('currentUser', JSON.stringify(this.currentUser));
 
-            window.FG_USER = {
+            window.GAT_USER = {
                 nik: this.currentUser.nik,
                 name: this.currentUser.name
             };
 
-            localStorage.setItem('fg_nik', this.currentUser.nik);
+            localStorage.setItem('gat_nik', this.currentUser.nik);
 
             this.authSection.classList.add('hidden');
             this.appSection.classList.remove('hidden');
@@ -568,7 +568,7 @@ class Auth {
             this.updateEventInfo();
 
             document.dispatchEvent(
-                new CustomEvent('fg:user-ready', { detail: window.FG_USER })
+                new CustomEvent('fg:user-ready', { detail: window.GAT_USER })
             );
 
             try{
@@ -645,17 +645,17 @@ rememberUser24h(nik){
     try{
         if(!nik) return;
         const payload = { nik: String(nik), ts: Date.now(), ttlMs: 24*60*60*1000 };
-        localStorage.setItem('fg_remember_v1', JSON.stringify(payload));
+        localStorage.setItem('gat_remember_v1', JSON.stringify(payload));
     }catch{}
 }
 
 clearRemember(){
-    try{ localStorage.removeItem('fg_remember_v1'); }catch{}
+    try{ localStorage.removeItem('gat_remember_v1'); }catch{}
 }
 
 async tryAutoLoginFromRemember(){
     try{
-        const raw = localStorage.getItem('fg_remember_v1');
+        const raw = localStorage.getItem('gat_remember_v1');
         if(!raw) return;
         const obj = JSON.parse(raw);
         if(!obj || !obj.nik || !obj.ts) return;
@@ -695,7 +695,7 @@ async tryAutoLoginFromRemember(){
             this.attended = false;
 
             sessionStorage.removeItem('currentUser');
-            try{ localStorage.removeItem('fg_nik'); }catch{}
+            try{ localStorage.removeItem('gat_nik'); }catch{}
             this.clearRemember();
 
             this.nikInput.value = '';
@@ -725,11 +725,11 @@ async tryAutoLoginFromRemember(){
                 this.currentUser = JSON.parse(savedUser);
 
                 // ✅ PENTING
-                window.FG_USER = {
+                window.GAT_USER = {
                     nik: this.currentUser.nik,
                     name: this.currentUser.name
                 };
-                localStorage.setItem('fg_nik', this.currentUser.nik);
+                localStorage.setItem('gat_nik', this.currentUser.nik);
 
                 this.authSection.classList.add('hidden');
                 this.appSection.classList.remove('hidden');
@@ -738,7 +738,7 @@ async tryAutoLoginFromRemember(){
                 this.updateEventInfo();
 
                 document.dispatchEvent(
-                    new CustomEvent('fg:user-ready', { detail: window.FG_USER })
+                    new CustomEvent('fg:user-ready', { detail: window.GAT_USER })
                 );
             } catch (e) {
                 sessionStorage.removeItem('currentUser');

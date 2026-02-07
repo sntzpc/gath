@@ -511,7 +511,7 @@ function configDefault_(){
 
 function configGet_(){
   var cache = CacheService.getScriptCache();
-  var cached = cache.get('FG_APP_CONFIG_V1');
+  var cached = cache.get('GAT_APP_CONFIG_V1');
   if(cached){
     try { return JSON.parse(cached); } catch (e) {}
   }
@@ -529,7 +529,7 @@ function configGet_(){
   if(!cfg) cfg = configDefault_();
 
   // ✅ Apps Script cache API: put(), bukan set()
-  cache.put('FG_APP_CONFIG_V1', JSON.stringify(cfg), 300); // 5 menit
+  cache.put('GAT_APP_CONFIG_V1', JSON.stringify(cfg), 300); // 5 menit
   return cfg;
 }
 
@@ -546,7 +546,7 @@ function configSet_(cfgPatch, username){
   upsertByKey_(SH.config, 'key', obj);
 
   // ✅ bust cache
-  CacheService.getScriptCache().remove('FG_APP_CONFIG_V1');
+  CacheService.getScriptCache().remove('GAT_APP_CONFIG_V1');
   return { ok:true };
 }
 
@@ -1316,7 +1316,7 @@ function haversineM_(lat1,lng1,lat2,lng2){
 // Diberi cache singkat agar live map tetap ringan.
 function liveMetaMap_(){
   const cache = CacheService.getScriptCache();
-  const cached = cache.get('FG_LIVE_META_V1');
+  const cached = cache.get('GAT_LIVE_META_V1');
   if(cached){
     try{ return JSON.parse(cached); }catch(_e){}
   }
@@ -1349,7 +1349,7 @@ function liveMetaMap_(){
     });
   }catch(e){ /* ignore */ }
 
-  cache.put('FG_LIVE_META_V1', JSON.stringify(meta), 60); // 60 detik
+  cache.put('GAT_LIVE_META_V1', JSON.stringify(meta), 60); // 60 detik
   return meta;
 }
 

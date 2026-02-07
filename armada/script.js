@@ -91,7 +91,7 @@
   const GAS_URL_GUC = 'PASTE_URL_GOOGLEUSERCONTENT_DISINI'; // <- WAJIB Anda isi
 
   // cache base yang pernah berhasil
-  const LS_KEY_LAST_GOOD_BASE = 'fg_kendaraan_last_good_base_v1';
+  const LS_KEY_LAST_GOOD_BASE = 'gat_kendaraan_last_good_base_v1';
 
   // -------------------------
   // JSONP helpers (mobile-safe)
@@ -107,7 +107,7 @@
 
   function jsonpCallOnce(baseUrl, params, timeoutMs = 30000){
     return new Promise((resolve, reject) => {
-      const cb = '__fg_jsonp_' + Date.now() + '_' + Math.random().toString(16).slice(2);
+      const cb = '__gat_jsonp_' + Date.now() + '_' + Math.random().toString(16).slice(2);
       let script = null;
       let done = false;
 

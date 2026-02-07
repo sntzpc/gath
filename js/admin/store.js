@@ -32,7 +32,7 @@
     FGAdmin.utils = window.utils;
   })();
 
-  const KEY = 'fg_admin_token_v1';
+  const KEY = 'gat_admin_token_v1';
   let token = '';
   try{ token = localStorage.getItem(KEY) || ''; }catch{ token = ''; }
 

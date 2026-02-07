@@ -139,7 +139,7 @@ function pm_(obj, cbid){
     '<!doctype html><html><head><meta charset="utf-8"></head><body>' +
     '<script>(function(){' +
     'var data=' + payload + ';' +
-    'try{ parent.postMessage({__fg_pm:true, cbid:' + JSON.stringify(cbid) + ', data:data}, "*"); }catch(e){}' +
+    'try{ parent.postMessage({__gat_pm:true, cbid:' + JSON.stringify(cbid) + ', data:data}, "*"); }catch(e){}' +
     '})();</script>' +
     '</body></html>';
   return HtmlService

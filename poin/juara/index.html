@@ -199,7 +199,7 @@
 <script>
 /* =========================================================
    FG2026 - Pengumuman Juara (Tailwind)
-   - Data source: localStorage (fg_eval_v5_ratings, fg_eval_v5_config_cache)
+   - Data source: localStorage (gat_eval_v5_ratings, gat_eval_v5_config_cache)
    - Optional: fetch server via GAS JSONP (admin.listRatings) jika ada token
    - Ranking formula meniru aplikasi penilaian:
      total += rating * (weight/100), lalu dijumlah per juri (sum) / dirata (avg)
@@ -222,7 +222,7 @@ function deriveGucFromExec(execUrl){
 const GAS_URL_GUC = deriveGucFromExec(GAS_URL_EXEC);
 
 // ✅ cache base terakhir yang sukses (penting untuk Chrome mobile)
-const LS_KEY_LAST_GOOD_BASE = "fg_eval_v5_last_good_base";
+const LS_KEY_LAST_GOOD_BASE = "gat_eval_v5_last_good_base";
 
 // =========================================================
 // Helpers append script (head kadang belum siap di Chrome mobile)
@@ -278,9 +278,9 @@ function buildJsonpUrl(baseUrl, action, params={}, payload=null, cbName=""){
 
 
 const LS = {
-  session: "fg_eval_v5_session",
-  config: "fg_eval_v5_config_cache",
-  ratings: "fg_eval_v5_ratings"
+  session: "gat_eval_v5_session",
+  config: "gat_eval_v5_config_cache",
+  ratings: "gat_eval_v5_ratings"
 };
 
 const $ = (q,el=document)=>el.querySelector(q);

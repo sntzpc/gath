@@ -553,7 +553,7 @@ function configDefault_(){
 
 function configGet_(){
   var cache = CacheService.getScriptCache();
-  var cached = cache.get('FG_APP_CONFIG_V1');
+  var cached = cache.get('GAT_APP_CONFIG_V1');
   if(cached){
     try { return JSON.parse(cached); } catch (e) {}
   }
@@ -571,7 +571,7 @@ function configGet_(){
   if(!cfg) cfg = configDefault_();
 
   // ✅ Apps Script cache API: put(), bukan set()
-  cache.put('FG_APP_CONFIG_V1', JSON.stringify(cfg), 300); // 5 menit
+  cache.put('GAT_APP_CONFIG_V1', JSON.stringify(cfg), 300); // 5 menit
   return cfg;
 }
 
@@ -588,7 +588,7 @@ function configSet_(cfgPatch, username){
   upsertByKey_(SH.config, 'key', obj);
 
   // ✅ bust cache
-  CacheService.getScriptCache().remove('FG_APP_CONFIG_V1');
+  CacheService.getScriptCache().remove('GAT_APP_CONFIG_V1');
   return { ok:true };
 }
 

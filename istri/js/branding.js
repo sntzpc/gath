@@ -145,7 +145,6 @@
 
     if(pageKey === 'doorprize'){
       setText('dp-header-title', tpl(p.headerTitle || '', ctx));
-      setText('dp-header-subtitle', tpl(p.headerSubtitle || '', ctx));
       setText('dp-machine-event', tpl(p.machineEventName || '', ctx));
       setText('stage-label', tpl(p.stageLabel || '', ctx));
     }

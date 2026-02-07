@@ -507,7 +507,7 @@ const GAS_URL_EXEC = 'https://script.google.com/macros/s/AKfycbydiufdQ-MnbU78AWB
 const GAS_URL_GUC = 'https://script.googleusercontent.com/macros/echo?user_content_key=AehSKLjDmKMHzGVdduLtizV62VslJUFaBUbQBM_swFkYtFyUpT2EM93E9BIQdfzwzsb73xE4Xr25lseBYFlKXR6O0SS84yfzBJnBJ-p0TTCcJnBcgTkmKP4x3NdqhXzWgXfESfhkK3JHsLBK9_i1Fe-UEfYar4y-XJRpuvnc-Ish7FEbMUqrGtKm7iGchxCTMhHfx9IiONhXxAuz8NyC66RuZheWoRQm84QQ4Aowr6kcZcySE0tATGdAxkeXbyotGETk13DMpHdR8k9h5i9bYvckk3qMShZliQ&lib=M06MNyn85XSI479q7jTSKZOKhRZZwLdRi';
 
 // cache untuk cadangan (opsional)
-const LS_KEY_LAST_GOOD_BASE = 'fg_dash_last_good_base_v1';
+const LS_KEY_LAST_GOOD_BASE = 'gat_dash_last_good_base_v1';
 
 // =========================================================
 // JSONP helper (mobile-safe)
@@ -523,7 +523,7 @@ function buildJsonpUrl(baseUrl, params, cbName){
 
 function jsonpCallOnce(baseUrl, params, timeoutMs = 30000){
   return new Promise((resolve, reject) => {
-    const cb = '__fg_jsonp_' + Date.now() + '_' + Math.random().toString(16).slice(2);
+    const cb = '__gat_jsonp_' + Date.now() + '_' + Math.random().toString(16).slice(2);
     let script = null;
     let done = false;
 
@@ -827,7 +827,7 @@ function setConnectionState(state, note){
         document.getElementById('errorTitle').textContent = 'Kesalahan Memuat Data';
         const msg = (error && error.message) ? error.message : 'Tidak dapat terhubung ke server. Coba refresh halaman.';
 
-        const baseHint = (localStorage.getItem('fg_dash_last_good_base_v1') || '').trim() || (typeof GAS_URL_GUC !== 'undefined' ? GAS_URL_GUC : '') || GAS_URL_EXEC;
+        const baseHint = (localStorage.getItem('gat_dash_last_good_base_v1') || '').trim() || (typeof GAS_URL_GUC !== 'undefined' ? GAS_URL_GUC : '') || GAS_URL_EXEC;
 
         const extra =
             '\n\nTips cepat:' +

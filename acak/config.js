@@ -85,7 +85,7 @@
       if(!patch || typeof patch !== 'object') return cfg;
       deepMerge(cfg, patch);
       if(persist){
-        try{ localStorage.setItem('fg_app_config_patch_v1', JSON.stringify(patch)); }catch(_){/* ignore */}
+        try{ localStorage.setItem('gat_app_config_patch_v1', JSON.stringify(patch)); }catch(_){/* ignore */}
       }
     }catch(_){/* ignore */}
     return cfg;
@@ -93,7 +93,7 @@
 
   // Apply cached patch (jika pernah sukses load config server)
   try{
-    const cached = localStorage.getItem('fg_app_config_patch_v1');
+    const cached = localStorage.getItem('gat_app_config_patch_v1');
     if(cached){
       const p = JSON.parse(cached);
       if(p && typeof p === 'object') cfg.applyPatch(p, false);
