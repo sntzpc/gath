@@ -1,7 +1,7 @@
 // core/storage.js
 export const LS = {
-  session: 'trip_tracker_session_v1',
-  cfg: 'trip_tracker_cfg_v1'
+  session: 'kmp2_trip_tracker_session_v1',
+  cfg: 'kmp2_trip_tracker_cfg_v1'
 };
 
 export function loadSession(){

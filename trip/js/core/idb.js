@@ -1,12 +1,12 @@
 // core/idb.js
 // Minimal IndexedDB helper (no deps)
 
-const DB_NAME = 'trip_tracker_offline_v1';
+const DB_NAME = 'kmp2_trip_tracker_offline_v1';
 const DB_VERSION = 1;
 
 const STORES = {
-  kv: 'kv',           // key -> {key, value, updatedAt}
-  queue: 'queue'      // offline ops queue: {id, opId, action, params, createdAt, status, attempts, lastAttemptAt, lastError, result, syncedAt}
+  kv: 'kv_kmp2',           // key -> {key, value, updatedAt}
+  queue: 'queue_kmp2'      // offline ops queue: {id, opId, action, params, createdAt, status, attempts, lastAttemptAt, lastError, result, syncedAt}
 };
 
 let _dbPromise = null;

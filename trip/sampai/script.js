@@ -14,7 +14,7 @@ const GAS_URL_EXEC = "https://script.google.com/macros/s/AKfycbyk2mmhCbx374aItCW
 const GAS_URL_GUC = "https://script.googleusercontent.com/macros/echo?user_content_key=AehSKLicwHfd4YJhBYMGSXTRdYUJ2AJzXTLx8Q1cDVMlv0fyqHLnRuvBqZ_SZugS9e-xEUqeVA0a8VKYhREkzH8DQNHauleSZCuRLRBCpiFrA_vsEo9dARrTHYrlbjVUE1fGNkDGIlGiwRpxFHsXoH0r-TrQQBEadBCfYgHoHqFaqkaCovEay_BHcbSM2trLkcGERNATXudC6C2vcwiLUQkCh7R_D9v4UtdT8l_iqJa0GUFaid0nAu3piK-9bWUtuP28WkoxDUQicM8WYceszrQpkQFuto_q8DapL8sr8_96&lib=MeiY_MMg9brLME1r3ljZRIEmSx4WqhLym";
 
         const API_TIMEOUT_MS = 15000;
-        const LS_KEY_LAST_GOOD_BASE = "tiba_last_good_base_v1";
+        const LS_KEY_LAST_GOOD_BASE = "kmp2_tiba_last_good_base_v1";
 
         function normalizeBaseUrl(u){
         if (!u) return "";

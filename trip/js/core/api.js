@@ -1,7 +1,7 @@
 // js/core/api.js
 
 export const API = {
-  url: 'https://script.google.com/macros/s/AKfycbyKnP2oqjMMDyVuadCba839aSM_pnm4y4VBTS-DMyBoQEvApBJ-tEi2uUUbt5wqtWvF/exec'
+  url: 'https://script.google.com/macros/s/AKfycbwG0eGIVwCJetlIIAO4c-gOiJ4muJso_6ALTV7AkjbzkSvS6a-gbDx5ZzOb7RvWmOSq/exec'
 };
 
 import { kvGet, kvSet, queueAdd, queueList, queueUpdate } from './idb.js';
