@@ -2,6 +2,20 @@
 const SPREADSHEET_ID = '1GOqDTBaRZb6PjX1kHKIZnebNJ4QIENr7cVnoMjZZHqE';
 const SHEET_NAME = 'attendance';
 
+// ===== PATCH START: normalize (case-insensitive grouping) + display uppercase =====
+function _normKey(v){
+  v = (v === null || v === undefined) ? '' : String(v);
+  // rapikan: trim + collapse spasi + lowercase untuk key
+  return v.trim().replace(/\s+/g,' ').toLowerCase();
+}
+function _dispUpper(v){
+  v = (v === null || v === undefined) ? '' : String(v);
+  // rapikan: trim + collapse spasi + tampil uppercase
+  return v.trim().replace(/\s+/g,' ').toUpperCase();
+}
+// ===== PATCH END =====
+
+
 // ===== PATCH START: JSONP-friendly doGet/doPost =====
 function doGet(e) {
   e = e || {};
@@ -23,6 +37,9 @@ function doGet(e) {
         break;
       case 'getAllData':
         result = getAllData();
+        break;
+      case 'ping':
+        result = { success:true, ts: new Date().toISOString() };
         break;
       default:
         result = { success: false, error: 'Invalid action' };
@@ -60,46 +77,74 @@ function getRegions() {
   var sheet = SpreadsheetApp.openById(SPREADSHEET_ID).getSheetByName(SHEET_NAME);
   var data = sheet.getDataRange().getValues();
   var headers = data[0];
-  
+
   var regionIndex = headers.indexOf('region');
-  var unitIndex = headers.indexOf('unit');
-  
-  var regions = {};
-  
-  // Skip header row
+  var unitIndex   = headers.indexOf('unit');
+  var famIdx      = headers.indexOf('family_json');
+
+  var regions = {}; // key: region_norm
+
   for (var i = 1; i < data.length; i++) {
     var row = data[i];
-    var region = row[regionIndex];
-    var unit = row[unitIndex];
-    
-    if (!regions[region]) {
-      regions[region] = {
-        name: region,
-        units: {},
+
+    var rawRegion = row[regionIndex];
+    var rawUnit   = row[unitIndex];
+
+    var rKey  = _normKey(rawRegion);
+    var rDisp = _dispUpper(rawRegion);
+
+    var uKey  = _normKey(rawUnit);
+    var uDisp = _dispUpper(rawUnit);
+
+    if (!rKey) continue; // skip region kosong
+
+    if (!regions[rKey]) {
+      regions[rKey] = {
+        key: rKey,              // untuk pemanggilan API berikutnya
+        name: rDisp,            // TAMPILAN: HURUF KAPITAL
+        units: {},              // key: unit_norm -> {key,name,count}
         totalParticipants: 0
       };
+    } else {
+      // pastikan display name tetap uppercase versi "rapi"
+      regions[rKey].name = rDisp || regions[rKey].name;
     }
-    
-    if (!regions[region].units[unit]) {
-      regions[region].units[unit] = 0;
+
+    if (uKey) {
+      if (!regions[rKey].units[uKey]) {
+        regions[rKey].units[uKey] = { key: uKey, name: uDisp, count: 0 };
+      } else {
+        regions[rKey].units[uKey].name = uDisp || regions[rKey].units[uKey].name;
+      }
     }
-    
-    // Parse family_json untuk menghitung total anggota keluarga
+
+    // hitung jumlah peserta (family_json jika ada)
+    var addCount = 1;
     try {
-      var family = JSON.parse(row[headers.indexOf('family_json')]);
-      var familyCount = family.length;
-      regions[region].units[unit] += familyCount;
-      regions[region].totalParticipants += familyCount;
-    } catch(e) {
-      regions[region].units[unit] += 1;
-      regions[region].totalParticipants += 1;
-    }
+      var fam = famIdx >= 0 ? JSON.parse(row[famIdx]) : null;
+      if (Array.isArray(fam) && fam.length > 0) addCount = fam.length;
+    } catch (e) {}
+
+    if (uKey) regions[rKey].units[uKey].count += addCount;
+    regions[rKey].totalParticipants += addCount;
   }
-  
-  return {
-    success: true,
-    data: Object.values(regions)
-  };
+
+  // output: unit list tetap berbentuk object agar frontend Anda tetap kompatibel
+  var out = Object.keys(regions).map(function(rk){
+    var r = regions[rk];
+    var unitsObj = {};
+    Object.keys(r.units).forEach(function(uk){
+      unitsObj[uk] = r.units[uk].count; // kompatibel dengan Object.keys(region.units).length
+    });
+    return {
+      key: r.key,
+      name: r.name,
+      units: unitsObj,
+      totalParticipants: r.totalParticipants
+    };
+  });
+
+  return { success: true, data: out };
 }
 
 // Mendapatkan daftar unit berdasarkan region
@@ -107,36 +152,41 @@ function getUnits(region) {
   var sheet = SpreadsheetApp.openById(SPREADSHEET_ID).getSheetByName(SHEET_NAME);
   var data = sheet.getDataRange().getValues();
   var headers = data[0];
-  
+
   var regionIndex = headers.indexOf('region');
-  var unitIndex = headers.indexOf('unit');
-  
-  var units = {};
-  
+  var unitIndex   = headers.indexOf('unit');
+  var famIdx      = headers.indexOf('family_json');
+
+  var rKeyReq = _normKey(region);
+  var units = {}; // key: unit_norm
+
   for (var i = 1; i < data.length; i++) {
     var row = data[i];
-    if (row[regionIndex] === region) {
-      var unit = row[unitIndex];
-      if (!units[unit]) {
-        units[unit] = {
-          name: unit,
-          totalParticipants: 0
-        };
-      }
-      
-      try {
-        var family = JSON.parse(row[headers.indexOf('family_json')]);
-        units[unit].totalParticipants += family.length;
-      } catch(e) {
-        units[unit].totalParticipants += 1;
-      }
+
+    var rKeyRow = _normKey(row[regionIndex]);
+    if (rKeyRow !== rKeyReq) continue;
+
+    var rawUnit = row[unitIndex];
+    var uKey = _normKey(rawUnit);
+    var uDisp = _dispUpper(rawUnit);
+    if (!uKey) continue;
+
+    if (!units[uKey]) {
+      units[uKey] = { key: uKey, name: uDisp, totalParticipants: 0 };
+    } else {
+      units[uKey].name = uDisp || units[uKey].name;
     }
+
+    var addCount = 1;
+    try {
+      var fam = famIdx >= 0 ? JSON.parse(row[famIdx]) : null;
+      if (Array.isArray(fam) && fam.length > 0) addCount = fam.length;
+    } catch (e) {}
+
+    units[uKey].totalParticipants += addCount;
   }
-  
-  return {
-    success: true,
-    data: Object.values(units)
-  };
+
+  return { success: true, data: Object.keys(units).map(k => units[k]) };
 }
 
 // Mendapatkan daftar peserta berdasarkan region dan unit
@@ -144,44 +194,44 @@ function getParticipants(region, unit) {
   var sheet = SpreadsheetApp.openById(SPREADSHEET_ID).getSheetByName(SHEET_NAME);
   var data = sheet.getDataRange().getValues();
   var headers = data[0];
-  
+
   var regionIndex = headers.indexOf('region');
-  var unitIndex = headers.indexOf('unit');
+  var unitIndex   = headers.indexOf('unit');
   var idIndex = headers.indexOf('id');
   var eventIdIndex = headers.indexOf('event_id');
   var nikIndex = headers.indexOf('nik');
   var nameIndex = headers.indexOf('name');
   var familyJsonIndex = headers.indexOf('family_json');
   var timestampIndex = headers.indexOf('timestamp');
-  
+
+  var rKeyReq = _normKey(region);
+  var uKeyReq = _normKey(unit);
+
   var participants = [];
-  
+
   for (var i = 1; i < data.length; i++) {
     var row = data[i];
-    if (row[regionIndex] === region && row[unitIndex] === unit) {
-      try {
-        var family = JSON.parse(row[familyJsonIndex]);
-      } catch(e) {
-        var family = [];
-      }
-      
-      participants.push({
-        id: row[idIndex],
-        eventId: row[eventIdIndex],
-        nik: row[nikIndex],
-        name: row[nameIndex],
-        region: row[regionIndex],
-        unit: row[unitIndex],
-        family: family,
-        timestamp: row[timestampIndex]
-      });
-    }
+
+    if (_normKey(row[regionIndex]) !== rKeyReq) continue;
+    if (_normKey(row[unitIndex]) !== uKeyReq) continue;
+
+    var family = [];
+    try { family = JSON.parse(row[familyJsonIndex]); if (!Array.isArray(family)) family = []; } catch(e) {}
+
+    participants.push({
+      id: row[idIndex],
+      eventId: row[eventIdIndex],
+      nik: row[nikIndex],
+      name: row[nameIndex],
+      // tampilkan uppercase yang rapi
+      region: _dispUpper(row[regionIndex]),
+      unit: _dispUpper(row[unitIndex]),
+      family: family,
+      timestamp: row[timestampIndex]
+    });
   }
-  
-  return {
-    success: true,
-    data: participants
-  };
+
+  return { success: true, data: participants };
 }
 
 // Mendapatkan semua data untuk tabel
