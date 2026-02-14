@@ -368,57 +368,90 @@
     </div>
 
     <script>
-        // Konfigurasi
-        const GAS_URL = 'https://script.google.com/macros/s/AKfycbzuvLJKVoTgKWDtrve2dFO8L5HCzIzhpoHSrccaVYCyV4MKRoYsCLsUtwygScayC5Ymmg/exec'; // Ganti dengan URL GAS Anda
+        // ===== PATCH START: Dual URL (GUC primary) + JSONP fallback =====
 
-         // ===== PATCH START: JSONP helper (CORS-safe, Chrome mobile OK) =====
-        function apiJsonp(action, params = {}) {
-            return new Promise((resolve, reject) => {
-            const cbName = 'CB_' + Date.now() + '_' + Math.random().toString(16).slice(2);
-            const url = new URL(GAS_URL);
-            url.searchParams.set('action', action);
-            Object.keys(params).forEach(k => {
-                if (params[k] !== undefined && params[k] !== null) url.searchParams.set(k, params[k]);
-            });
-            url.searchParams.set('callback', cbName);
-            url.searchParams.set('_t', String(Date.now())); // cache buster
+            // 1) URL EXEC (Anda sudah punya)
+            const GAS_URL_EXEC = 'https://script.google.com/macros/s/AKfycbzuvLJKVoTgKWDtrve2dFO8L5HCzIzhpoHSrccaVYCyV4MKRoYsCLsUtwygScayC5Ymmg/exec';
 
-            const script = document.createElement('script');
-            script.async = true;
-            script.src = url.toString();
+            // 2) URL REDIRECT (Googleusercontent) -> WAJIB Anda isi dari Deploy GAS (Web App)
+            // Contoh format:
+            // https://script.googleusercontent.com/macros/echo?user_content_key=XXXX&lib=YYYY
+            // Jika belum punya, buka web app Anda sekali di browser desktop lalu ambil URL yang ber-domain script.googleusercontent.com dari network/redirect.
+            const GAS_URL_GUC  = 'https://script.googleusercontent.com/macros/echo?user_content_key=AY5xjrSo2v9mtguWeq7Z0rgpmfGfVFtqj1UBRzQjfauqCDmmw-DjASRMSB5xxV4oGmI2PX4hlFSdscq7ZBWq-TPtpMhnoDf52BvQoqD7PMe1qTitcdr7S4H8WAtuq5f3wC3DoLDYpAmH9w_UsxQ4alieoSvwK_HOWk1-jogJqOU--WLJtY7KovvqUho0Tuxx-3R5WwVWsDuIUVl69LnrL0VKcyfgxdLDScz8fFjjstMhTGJ2gIuCkiqViDaIUJXi0eb918LbDXCpSzD-IILJc4D7gT36gCX5ae3gsmUh6OQD&lib=MbC-WCZ26Wl6w-iI1fqIok0mSx4WqhLym';
 
-            let done = false;
-            const timeout = setTimeout(() => {
-                if (done) return;
-                done = true;
-                cleanup();
-                reject(new Error('Timeout JSONP'));
-            }, 20000);
-
-            function cleanup() {
-                clearTimeout(timeout);
-                try { delete window[cbName]; } catch(e) { window[cbName] = undefined; }
-                if (script && script.parentNode) script.parentNode.removeChild(script);
+            // Pilih base URL: mobile lebih aman pakai GUC
+            function pickBaseUrlList(){
+                const list = [];
+                if (GAS_URL_GUC && GAS_URL_GUC.startsWith('https://script.googleusercontent.com/')) list.push(GAS_URL_GUC);
+                list.push(GAS_URL_EXEC);
+                return list;
             }
 
-            window[cbName] = (data) => {
-                if (done) return;
-                done = true;
-                cleanup();
-                resolve(data);
-            };
+            function _jsonpOnce(baseUrl, action, params = {}, timeoutMs = 20000){
+                return new Promise((resolve, reject) => {
+                const cbName = 'CB_' + Date.now() + '_' + Math.random().toString(16).slice(2);
 
-            script.onerror = () => {
-                if (done) return;
-                done = true;
-                cleanup();
-                reject(new Error('Gagal load JSONP (network/CSP)'));
-            };
+                const url = new URL(baseUrl);
+                url.searchParams.set('action', action);
+                Object.keys(params).forEach(k => {
+                    const v = params[k];
+                    if (v !== undefined && v !== null) url.searchParams.set(k, v);
+                });
+                url.searchParams.set('callback', cbName);
+                url.searchParams.set('_t', String(Date.now())); // cache buster
 
-            document.head.appendChild(script);
-            });
-  }
-  // ===== PATCH END =====
+                const script = document.createElement('script');
+                script.async = true;
+                script.src = url.toString();
+
+                let done = false;
+                const timer = setTimeout(() => {
+                    if (done) return;
+                    done = true;
+                    cleanup();
+                    reject(new Error('Timeout JSONP'));
+                }, timeoutMs);
+
+                function cleanup(){
+                    clearTimeout(timer);
+                    try { delete window[cbName]; } catch(e) { window[cbName] = undefined; }
+                    if (script && script.parentNode) script.parentNode.removeChild(script);
+                }
+
+                window[cbName] = (data) => {
+                    if (done) return;
+                    done = true;
+                    cleanup();
+                    resolve(data);
+                };
+
+                script.onerror = () => {
+                    if (done) return;
+                    done = true;
+                    cleanup();
+                    reject(new Error('Gagal load JSONP'));
+                };
+
+                document.head.appendChild(script);
+                });
+            }
+
+            // JSONP with fallback (GUC -> EXEC)
+            async function apiJsonp(action, params = {}) {
+                const bases = pickBaseUrlList();
+                let lastErr = null;
+                for (const base of bases) {
+                try {
+                    return await _jsonpOnce(base, action, params);
+                } catch (e) {
+                    lastErr = e;
+                    // lanjut coba base berikutnya
+                }
+                }
+                throw lastErr || new Error('Semua endpoint JSONP gagal');
+            }
+
+            // ===== PATCH END =====      
         
         // State management
         let currentLevel = 'region'; // region, unit, participants
@@ -632,18 +665,18 @@
 
         // Download Excel
         function downloadExcel() {
-            if (!allData || allData.length === 0) {
-                alert('Tidak ada data untuk di-download');
-                return;
-            }
-            
-            // Convert to worksheet
-            const ws = XLSX.utils.json_to_sheet(allData);
-            const wb = XLSX.utils.book_new();
-            XLSX.utils.book_append_sheet(wb, ws, 'Attendance');
-            
-            // Download
-            XLSX.writeFile(wb, `kmp2_attendance_${new Date().toISOString().split('T')[0]}.xlsx`);
+        if (!window.XLSX) {
+            alert('Library Excel belum siap. Coba tunggu 2-3 detik lalu klik lagi.');
+            return;
+        }
+        if (!allData || allData.length === 0) {
+            alert('Tidak ada data untuk di-download');
+            return;
+        }
+        const ws = XLSX.utils.json_to_sheet(allData);
+        const wb = XLSX.utils.book_new();
+        XLSX.utils.book_append_sheet(wb, ws, 'Attendance');
+        XLSX.writeFile(wb, `kmp2_attendance_${new Date().toISOString().split('T')[0]}.xlsx`);
         }
 
         // Helper: format date
