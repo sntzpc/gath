@@ -19,7 +19,7 @@ Dashboard ini menampilkan:
 2. Klik **Pengaturan** (ikon gear)
 3. Isi:
    - Backend URL: URL Web App GAS
-   - Event ID: contoh `GALA_2026`
+   - Event ID: contoh `KMP2_2026`
    - Waktu Gala Dinner: pilih tanggal & jam
    - Interval refresh: 5 detik (disarankan)
    - Interval ganti kartu: 8 detik (disarankan)

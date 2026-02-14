@@ -8,7 +8,7 @@
 
   // ✅ Hardcode URL backend (GAS Web App)
   // Catatan: gunakan URL script.googleusercontent.com jika tersedia (lebih aman dari CORS).
-  const BACKEND_URL = 'https://script.google.com/macros/s/AKfycbw6U95yuf5JvISfGuzewHWecaoXv9_6xafmNEYgXIbK4QQnZDw3HhZ1TfTTJ5_nCtPF0A/exec';
+  const BACKEND_URL = 'https://script.google.com/macros/s/AKfycbxyZZIGGHzIqwDap1T_ZNrwaB7YN2ItJyUd-5Uqc2OnCG6HTt9H5luvNZxS2kvc4Nypnw/exec';
 
   const STORAGE_KEY = 'gat_gala_kmp2_settings_v1';
 
@@ -295,7 +295,7 @@
 
     $('#settings-form').addEventListener('submit', async (e)=>{
       e.preventDefault();
-      const eventId = ($('#in-event').value||'').trim() || 'GALA_2026';
+      const eventId = ($('#in-event').value||'').trim() || 'KMP2_2026';
       const gala = ($('#in-gala').value||'').trim();
       const refreshSec = Math.max(2, Number($('#in-refresh').value)||5);
       const cycleSec = Math.max(3, Number($('#in-cycle').value)||8);
